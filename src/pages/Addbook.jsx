@@ -10,19 +10,12 @@ const Addbook = () => {
         publication: "",
         publishAt: ""
     });
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState({});
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
-        console.log(imagesize)
-        if (imagesize > 5) {
-            setImage(null);
-            document.getElementById("image").value = null;
-            alert('file should lessthan equal to 5Mb');
-            return;
-        }
         try {
+
             //return a {} null object
             const formData = new FormData();
 
@@ -38,19 +31,21 @@ const Addbook = () => {
             //entry into fromdata dynamically 
             //console.log(Object.entries(data))
             // return a array with multiple array inside ,of the data
+
             Object.entries(data).forEach(([key, value]) => {
                 formData.append(key, value)
             })
             if (image) {
                 const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
                 if (imagesize > 5) {
-                    setImage(null);
-                    document.getElementById("image").value = null;
+                    setImage("");
+                    document.getElementById("image").value = "";
                     alert('file should lessthan equal to 5Mb');
                     return;
                 }
                 formData.append('image', image);
             }
+
 
             // const response = await axios.post('http://localhost:3000/books', formData, {
             //     headers: {
@@ -65,15 +60,16 @@ const Addbook = () => {
             if (response.status === 201) {
                 alert('Book added successfully');
                 setData({
-                    name: " ",
-                    price: " ",
-                    isbn: " ",
-                    author: " ",
-                    publication: " ",
-                    publishAt: " "
+                    name: "",
+                    price: "",
+                    isbn: "",
+                    author: "",
+                    publication: "",
+                    publishAt: ""
                 });
-                setImage(null);
-                document.getElementById("image").value = null;
+                setImage("");
+                document.getElementById("image").value = "";
+
             }
         } catch (error) {
             console.error('Error adding book:', error);
