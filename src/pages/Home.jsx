@@ -9,7 +9,7 @@ const Home = () => {
     };
     const fetchBooks = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/books'); // Assuming your API endpoint is '/api/books'
+            const response = await axios.get('https://mern2-0-cms-backend.onrender.com/books'); // Assuming your API endpoint is '/api/books'
             if (response.status === 200) {
                 setBooks(response.data.data); // Assuming the books data is in the 'data' field of the response
             } else {
