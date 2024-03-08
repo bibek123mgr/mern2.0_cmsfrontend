@@ -41,7 +41,16 @@ const Addbook = () => {
             Object.entries(data).forEach(([key, value]) => {
                 formData.append(key, value)
             })
-            formData.append('image', image);
+            if (image) {
+                const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
+                if (imagesize > 5) {
+                    setImage(null);
+                    document.getElementById("image").value = null;
+                    alert('file should lessthan equal to 5Mb');
+                    return;
+                }
+                formData.append('image', image);
+            }
 
             // const response = await axios.post('http://localhost:3000/books', formData, {
             //     headers: {
@@ -56,12 +65,12 @@ const Addbook = () => {
             if (response.status === 201) {
                 alert('Book added successfully');
                 setData({
-                    name: "",
-                    price: "",
-                    isbn: "",
-                    author: "",
-                    publication: "",
-                    publishAt: ""
+                    name: " ",
+                    price: " ",
+                    isbn: " ",
+                    author: " ",
+                    publication: " ",
+                    publishAt: " "
                 });
                 setImage(null);
                 document.getElementById("image").value = null;
@@ -91,27 +100,27 @@ const Addbook = () => {
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="bookName" className="block text-sm font-medium text-gray-600">Book Name</label>
-                    <input type="text" id="bookName" name="name" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                    <input type="text" id="bookName" name="name" className="mt-1 p-2 w-full border rounded-md text-gray-800" value={data.name} onChange={handleInputChange} />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="bookPrice" className="block text-sm font-medium text-gray-600">Book Price</label>
-                    <input type="number" id="price" name="price" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                    <input type="number" id="price" name="price" className="mt-1 p-2 w-full border rounded-md text-gray-800" value={data.price} onChange={handleInputChange} />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="isbnNumber" className="block text-sm font-medium text-gray-600">ISBN Number</label>
-                    <input type="number" id="isbn" name="isbn" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                    <input type="number" id="isbn" name="isbn" className="mt-1 p-2 w-full border rounded-md text-gray-800" value={data.isbn} onChange={handleInputChange} />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="authorName" className="block text-sm font-medium text-gray-600">Author Name</label>
-                    <input type="text" id="author" name="author" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                    <input type="text" id="author" name="author" className="mt-1 p-2 w-full border rounded-md text-gray-800" value={data.author} onChange={handleInputChange} />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="publication" className="block text-sm font-medium text-gray-600">Publication</label>
-                    <input type="text" id="publication" name="publication" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                    <input type="text" id="publication" name="publication" className="mt-1 p-2 w-full border rounded-md text-gray-800" value={data.publication} onChange={handleInputChange} />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="setPublishAt" className="block text-sm font-medium text-gray-600">Publish Date</label>
-                    <input type="date" id="publishAt" name="publishAt" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                    <input type="date" id="publishAt" name="publishAt" className="mt-1 p-2 w-full border rounded-md text-gray-800" value={data.publishAt} onChange={handleInputChange} />
                 </div>
                 <div className="mb-6">
                     <label htmlFor="bookImage" className="block text-sm font-medium text-gray-600">Book Image</label>
