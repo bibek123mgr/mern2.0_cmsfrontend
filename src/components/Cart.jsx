@@ -27,7 +27,7 @@ const Cart = ({ book, onDelete }) => {
             </div>
             <div className='flex justify-between items-center'>
                 <button onClick={handledelete} className='bg-blue-600 p-2 text-white'>delete</button>
-                <button>edit</button>
+                <button><Link to={`editbook/${book._id}`}>Edit</Link></button>
             </div>
         </div>
     );
