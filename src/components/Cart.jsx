@@ -6,7 +6,7 @@ const Cart = ({ book, onDelete }) => {
     const [books, setBooks] = useState({})
     const handledelete = async () => {
         try {
-            await axios.delete(`https://mern2-0-cms-backend.onrender.com/${book._id}`);
+            await axios.delete(`https://mern2-0-cms-backend.onrender.com/books/${book._id}`);
             onDelete(book._id);
             alert('Successfully deleted');
         } catch (err) {

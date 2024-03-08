@@ -1,43 +1,126 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-const Editbook = () => {
-    const [imageFile, setImageFile] = useState(null);
+const Addbook = () => {
+    const [data, setData] = useState({
+        name: "",
+        price: "",
+        isbn: "",
+        author: "",
+        publication: "",
+        publishAt: ""
+    });
+    const [image, setImage] = useState(null);
 
-    useEffect(() => {
-        fetchFile();
-    }, []);
-
-    const fetchFile = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
+        console.log(imagesize)
+        if (imagesize > 5) {
+            setImage(null);
+            document.getElementById("image").value = null;
+            alert('file should lessthan equal to 5Mb');
+            return;
+        }
         try {
-            const response = await axios.get('https://mern2-0-cms-backend.onrender.com/books/image', {
-                responseType: 'blob', // Ensure response is treated as a blob
-            });
+            //return a {} null object
+            const formData = new FormData();
 
-            if (response.status === 200) {
-                const blob = new Blob([response.data], { type: 'image/jpeg' }); // Adjust type based on file type
-                const file = new File([blob], 'image.jpg'); // Adjust filename as needed
-                setImageFile(file);
+            //entry in form data munually
+            // formData.append('name', data.name);
+            // formData.append('price', data.price);
+            // formData.append('isbn', data.isbn);
+            // formData.append('author', data.author);
+            // formData.append('publication', data.publication);
+            // formData.append('publishAt', data.publishAt);
+            // formData.append('image', image);
+
+            //entry into fromdata dynamically 
+            //console.log(Object.entries(data))
+            // return a array with multiple array inside ,of the data
+            Object.entries(data).forEach(([key, value]) => {
+                formData.append(key, value)
+            })
+            formData.append('image', image);
+
+            // const response = await axios.post('http://localhost:3000/books', formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'   
+            //     }
+            // });
+
+
+            //we dont need header if new pass data throught formdata
+            const response = await axios.post('https://mern2-0-cms-backend.onrender.com/books', formData,);
+
+            if (response.status === 201) {
+                alert('Book added successfully');
+                setData({
+                    name: "",
+                    price: "",
+                    isbn: "",
+                    author: "",
+                    publication: "",
+                    publishAt: ""
+                });
+                setImage(null);
+                document.getElementById("image").value = null;
             }
         } catch (error) {
-            console.error('Error fetching file:', error);
+            console.error('Error adding book:', error);
+            alert('Something went wrong');
         }
     };
 
-    const handleFileChange = (e) => {
-        setImageFile(e.target.files[0]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setData({
+            ...data,
+            [name]: value
+        });
+    };
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
     };
 
     return (
-        <div>
-            {imageFile && (
-                <div>
-                    <label htmlFor="fileInput">Choose a file:</label>
-                    <input type="file" id="fileInput" onChange={handleFileChange} />
+        <div className="bg-white rounded-lg shadow-md p-8 w-full mx-auto my-16 max-w-md">
+            <h2 className="text-2xl font-semibold text-blue-600 mb-6">Add Book</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                    <label htmlFor="bookName" className="block text-sm font-medium text-gray-600">Book Name</label>
+                    <input type="text" id="bookName" name="name" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
                 </div>
-            )}
+                <div className="mb-4">
+                    <label htmlFor="bookPrice" className="block text-sm font-medium text-gray-600">Book Price</label>
+                    <input type="number" id="price" name="price" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="isbnNumber" className="block text-sm font-medium text-gray-600">ISBN Number</label>
+                    <input type="number" id="isbn" name="isbn" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="authorName" className="block text-sm font-medium text-gray-600">Author Name</label>
+                    <input type="text" id="author" name="author" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="publication" className="block text-sm font-medium text-gray-600">Publication</label>
+                    <input type="text" id="publication" name="publication" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="setPublishAt" className="block text-sm font-medium text-gray-600">Publish Date</label>
+                    <input type="date" id="publishAt" name="publishAt" className="mt-1 p-2 w-full border rounded-md text-gray-800" required onChange={handleInputChange} />
+                </div>
+                <div className="mb-6">
+                    <label htmlFor="bookImage" className="block text-sm font-medium text-gray-600">Book Image</label>
+                    <input type="file" id="image" name="image" className="mt-1 p-2 w-full border rounded-md text-gray-800" onChange={handleImageChange} />
+                </div>
+                <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Add Book</button>
+            </form>
         </div>
     );
-};
+}
 
-export default Editbook;
+export default Addbook;
