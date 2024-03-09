@@ -11,7 +11,7 @@ const Addbook = () => {
         publishAt: ""
     });
     const [image, setImage] = useState({});
-
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -54,7 +54,7 @@ const Addbook = () => {
             }
 
 
-            // const response = await axios.post('http://localhost:3000/books', formData, {
+            // const response = await axios.post('https://mern2-0-cms-backend.onrender.com/books', formData, {
             //     headers: {
             //         'Content-Type': 'multipart/form-data'   
             //     }
