@@ -36,6 +36,13 @@ const Addbook = () => {
                 formData.append(key, value)
             })
             if (image) {
+                console.log(image.type)
+                if (!validTypes.includes(image.type)) {
+                    setImage("");
+                    document.getElementById("image").value = "";
+                    alert(`invalid image type, png jpg and jpeg accept`)
+                    return;
+                }
                 const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
                 if (imagesize > 5) {
                     setImage("");

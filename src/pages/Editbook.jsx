@@ -28,26 +28,39 @@ const Editbook = () => {
         }
     };
 
+    //store image link into new variavle
+    const oldimagepath = image
+
     useEffect(() => {
         fetchdata();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
-        if (imagesize > 5) {
-            setImage(null);
-            document.getElementById("image").value = null;
-            alert('file should lessthan equal to 5Mb');
-            return;
-        }
         try {
             const formData = new FormData();
 
             Object.entries(data).forEach(([key, value]) => {
                 formData.append(key, value)
             });
-            if (image) {
+            if (oldimagepath == image) {
+                formData.append('image', image);
+            } else {
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                console.log(image.type)
+                if (!validTypes.includes(image.type)) {
+                    setImage("");
+                    document.getElementById("image").value = "";
+                    alert(`invalid image type, png jpg and jpeg accept`)
+                    return;
+                }
+                const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
+                if (imagesize > 5) {
+                    setImage(null);
+                    document.getElementById("image").value = null;
+                    alert('file should lessthan equal to 5Mb');
+                    return;
+                }
                 formData.append('image', image);
             }
             const response = await axios.patch(`https://mern2-0-cms-backend.onrender.com/books/${id}`, formData);
