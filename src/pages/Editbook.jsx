@@ -5,7 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 const Editbook = () => {
     const navigate = useNavigate()
     const { id } = useParams();
-    const [image, setImage] = useState(null);
+    const [oldbookimageUrl, setOldbookimageUrl] = useState({})
+    const [image, setImage] = useState({});
     const [data, setData] = useState({
         name: "",
         price: "",
@@ -21,15 +22,13 @@ const Editbook = () => {
             if (response.status === 200) {
                 const bookdata = response.data.data
                 setData(bookdata);
+                setOldbookimageUrl(bookdata.imageUrl)
                 setImage(bookdata.imageUrl)
             }
         } catch (error) {
             console.error(error);
         }
     };
-
-    //store image link into new variavle
-    const oldimagepath = image
 
     useEffect(() => {
         fetchdata();
@@ -39,13 +38,13 @@ const Editbook = () => {
         e.preventDefault();
         try {
             const formData = new FormData();
-
             Object.entries(data).forEach(([key, value]) => {
                 formData.append(key, value)
             });
-            if (oldimagepath == image) {
+            if (image === oldbookimageUrl) {
                 formData.append('image', image);
             } else {
+                console.log(image)
                 const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
                 console.log(image.type)
                 if (!validTypes.includes(image.type)) {
@@ -56,8 +55,8 @@ const Editbook = () => {
                 }
                 const imagesize = ((image.size) / (1024 * 1024)).toFixed(2);
                 if (imagesize > 5) {
-                    setImage(null);
-                    document.getElementById("image").value = null;
+                    setImage("");
+                    document.getElementById("image").value = "";
                     alert('file should lessthan equal to 5Mb');
                     return;
                 }
